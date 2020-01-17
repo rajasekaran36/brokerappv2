@@ -15,6 +15,7 @@ public class App{
         
        /*  for(Trade a:b.allTrades)
             System.out.println(a.toString()); */
-        b.settle();
+        b.settle(b.customers.get("CITIBNPPARIA"));
+        b.getSettlement();
     }
 }

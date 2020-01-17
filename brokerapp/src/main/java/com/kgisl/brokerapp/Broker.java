@@ -63,21 +63,55 @@ public class Broker{
         }
         return al;
     }
-    public void settle(){
-        for(Customer x:customers.values()){
-            ArrayList<Trade> cusTrades = getCustomerSpecificTrades(x);
-            Set<String> symbols = new HashSet<String>();
-            for(Trade s:cusTrades){
-                symbols.add(s.getSymbol());
+    
+    
+    public void settle(Customer x){
+        x.customerTrades = getCustomerSpecificTrades(x);
+        HashMap<String,ArrayList<Trade>> catog = new HashMap<String,ArrayList<Trade>>();
+        for(Trade t:x.customerTrades){
+            String tradeSymbol = t.getSymbol();
+            catog.put(tradeSymbol, new ArrayList<Trade>());
+        }
+        for(Trade t:x.customerTrades){
+            String tradeSymbol = t.getSymbol();
+            catog.get(tradeSymbol).add(t);
+        }
+        for(ArrayList<Trade> al:catog.values()){
+            Settlement s= new Settlement();
+            s.setCustomer(x);
+            Integer totalqty=0;
+            Double waitAvg = 0.0;
+            for(Trade l:al){
+                s.setTrade(l);
+                totalqty = totalqty+l.qty;
+                waitAvg = waitAvg+l.rate;
+                System.out.println(l.toString());
             }
-            String setS = String.join(",", symbols);
-            System.out.println(setS);
-            for(String s:(String[])setS.split(",")){
-                for(Trade t:cusTrades){
-                    if(t.getSymbol()==s)
-                        System.out.println(t.toString());
-                }
-            }
+            s.totalQty = totalqty;
+            s.waitAvg = waitAvg;
+            s.computeCharges();
+            settlements.add(s);
+            System.out.println("-------------------------------------");
         }
     }
+    public void getSettlement(){
+        for(Settlement s:settlements){
+            System.out.println("-------------------------");
+            String[] de = s.toString().split(",");
+            System.out.println("Client ID   :"+de[0]);
+            System.out.println("Symbol      :"+de[1]);
+            System.out.println("Total Qty   :"+de[2]);
+            System.out.println("Total Rate  :"+de[3]);
+            System.out.println("Market Rate :"+de[4]);
+            System.out.println("Brock Charge:"+de[5]);
+            System.out.println("GST         :"+de[6]);
+            System.out.println("STT Amount  :"+de[7]);
+            System.out.println("Stampduty   :"+de[8]);
+            System.out.println("Trans Charge:"+de[9]);
+            System.out.println("SEBI Fee    :"+de[10]);
+            System.out.println("Total NET   :"+de[11]);
+            System.out.println("-------------------------");
+        }
+    }
+
 }
