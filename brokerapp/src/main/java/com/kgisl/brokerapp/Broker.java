@@ -69,18 +69,15 @@ public class Broker{
             Set<String> symbols = new HashSet<String>();
             for(Trade s:cusTrades){
                 symbols.add(s.getSymbol());
-                //System.out.println(s.toString());
             }
-            Iterator it = symbols.iterator();
-            while(it.hasNext()){
-                String curSym = (String)it.next();
-                for(Trade t:getCustomerSpecificSymbolTrades(x,curSym)){
-                    System.out.println(t.toString());
+            String setS = String.join(",", symbols);
+            System.out.println(setS);
+            for(String s:(String[])setS.split(",")){
+                for(Trade t:cusTrades){
+                    if(t.getSymbol()==s)
+                        System.out.println(t.toString());
                 }
-                System.out.println("---------------------------");
             }
-            //System.out.println(symbols.toString());
-            System.out.println("*******************************");
         }
     }
 }
