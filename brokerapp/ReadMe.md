@@ -1,4 +1,4 @@
-`code`
+
 { customerID='CITIMACQBANK', panNumber='TESTPAN002', onBoard='true', brokerCharges='2.35'}
 { customerID='STAN00000263', panNumber='TESTPAN003', onBoard='true', brokerCharges='4.46'}
 { customerID='CITI00001488', panNumber='TESTPAN002', onBoard='true', brokerCharges='2.76'}
@@ -42,7 +42,3 @@ totalnet='241158.34713993748'}
 { customerId='CITIBNPPARIA', symbol='ITC ', brokerCharge='2.36', totalqty='3000', marketAmount='1177800.0', brokerageAmount='27796.079999999998', gst='5003.2944', sttAmount='4.725333600000001', stampDuty='1.389804', transCharge='0.9033726', sebiFee='0.5559216', totalnet='1210606.9488318001'}
 
 { customerId='CITIBNPPARIA', symbol='AXISBANK', brokerCharge='2.36', totalqty='1500', marketAmount='835500.0', brokerageAmount='19717.8', gst='3549.2039999999997', sttAmount='3.3520260000000004', stampDuty='0.98589', transCharge='0.6408284999999999', sebiFee='0.394356', totalnet='858772.3771005002'}
-
-
-
-`code`
