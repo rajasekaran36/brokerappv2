@@ -20,7 +20,7 @@ public class Settlement{
     Settlement(){}
 
     public void computeCharges(){ 
-        this.marketAmount = rounder(this.totalQty*this.waitAvg);
+        //this.marketAmount = rounder(this.totalQty*this.waitAvg);
         Double oneper = rounder(this.marketAmount/100);
         this.brokerageAmount = rounder(oneper*2.5);
         this.gst = rounder(oneper*18);
@@ -40,8 +40,8 @@ public class Settlement{
         StringBuffer sb = new StringBuffer();
         sb.append(this.aCustomer.getId()+",");
         sb.append(this.aTrade.getSymbol()+",");
-        sb.append(this.totalQty+",");
-        sb.append(this.waitAvg+",");
+        //sb.append(this.totalQty+",");
+        //sb.append(this.waitAvg+",");
         sb.append(this.marketAmount+",");
         sb.append(this.brokerageAmount+",");
         sb.append(this.gst+",");

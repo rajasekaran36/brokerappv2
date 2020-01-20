@@ -79,16 +79,13 @@ public class Broker{
         for(ArrayList<Trade> al:catog.values()){
             Settlement s= new Settlement();
             s.setCustomer(x);
-            Integer totalqty=0;
-            Double waitAvg = 0.0;
+            Double marketAm=0.0;
             for(Trade l:al){
                 s.setTrade(l);
-                totalqty = totalqty+l.qty;
-                waitAvg = waitAvg+l.rate;
+                marketAm = marketAm+l.amount;
                 System.out.println(l.toString());
             }
-            s.totalQty = totalqty;
-            s.waitAvg = waitAvg;
+            s.marketAmount=marketAm;
             s.computeCharges();
             settlements.add(s);
             System.out.println("-------------------------------------");
@@ -100,16 +97,16 @@ public class Broker{
             String[] de = s.toString().split(",");
             System.out.println("Client ID   :"+de[0]);
             System.out.println("Symbol      :"+de[1]);
-            System.out.println("Total Qty   :"+de[2]);
-            System.out.println("Total Rate  :"+de[3]);
-            System.out.println("Market Rate :"+de[4]);
-            System.out.println("Brock Charge:"+de[5]);
-            System.out.println("GST         :"+de[6]);
-            System.out.println("STT Amount  :"+de[7]);
-            System.out.println("Stampduty   :"+de[8]);
-            System.out.println("Trans Charge:"+de[9]);
-            System.out.println("SEBI Fee    :"+de[10]);
-            System.out.println("Total NET   :"+de[11]);
+            //System.out.println("Total Qty   :"+de[2]);
+            //System.out.println("Total Rate  :"+de[3]);
+            System.out.println("Market Rate :"+de[2]);
+            System.out.println("Brock Charge:"+de[3]);
+            System.out.println("GST         :"+de[4]);
+            System.out.println("STT Amount  :"+de[5]);
+            System.out.println("Stampduty   :"+de[6]);
+            System.out.println("Trans Charge:"+de[7]);
+            System.out.println("SEBI Fee    :"+de[8]);
+            System.out.println("Total NET   :"+de[9]);
             System.out.println("-------------------------");
         }
     }
