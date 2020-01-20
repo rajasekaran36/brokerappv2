@@ -1,52 +1,102 @@
 package com.kgisl.brokerapp;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.*;
-import java.io.*;
 
 public class Broker{
     HashMap<String,Customer> customers;
-    ArrayList<Trade> allTrades;
+    ArrayList<Trade> trades;
+    Charges tradeCharges;
     ArrayList<Settlement> settlements;
     Broker(){
         this.customers = new HashMap<String,Customer>();
-        this.allTrades = new ArrayList<Trade>();
+        this.trades = new ArrayList<Trade>();
+        this.tradeCharges = new Charges(18.0, 0.017, 0.005, 0.00325, 0.002);
         settlements = new ArrayList<Settlement>();
     }
-    public boolean addCustomer(String id, String pan){
-        if(!id.equals(null)&&!pan.equals(null)){
-            Customer aCustomer = new Customer();
-            aCustomer.setId(id);
-            aCustomer.setPanId(pan);
-            aCustomer.makeOnBoard(true);
-            customers.put(id, aCustomer);
-            System.out.println("Customer Added");
+    public boolean addCustomer(String customerID, String panNumber, boolean onBoard,Double brokerCharge){
+        if(!customerID.equals(null)&&!panNumber.equals(null)){
+            Customer aCustomer = new Customer(customerID, panNumber, onBoard,brokerCharge);
+            customers.put(aCustomer.getCustomerID(), aCustomer);
             return true;
         }
         else
             return false;
     }
 
-    public void addTradeDetails(String fileName){
-        try{
-            File aFile = new File(fileName);
-            Scanner inFile = new Scanner(aFile);
-            inFile.nextLine();
-            while(inFile.hasNextLine()){
-                String[] aTradeString = inFile.nextLine().split(",");
-                Trade aTrade = new Trade(customers.get(aTradeString[0]), aTradeString[1], Integer.parseInt(aTradeString[2]), Double.parseDouble(aTradeString[3]));
-                allTrades.add(aTrade);
-                //System.out.println("---Done--");
-            }
-            inFile.close();
+    public String checkCustomer(String customerID){
+    
+        return customers.get("customerID").toString();
+    }
+
+    public void mapCustomers(ArrayList<Customer> listOfCustomers){
+        for(Customer aCustomer:listOfCustomers)
+            customers.put(aCustomer.getCustomerID(), aCustomer);
+    }
+
+    public String getCustomerDetails(){
+        String customerInfo = "";
+        for(Customer aCustomer:customers.values())
+            customerInfo = customerInfo+aCustomer.toString()+"\n";
+        return customerInfo;
+    }
+
+    public String getTradeDetails(ArrayList<Trade> listOfTrades){
+        String tradeInfo = "";
+        for(Trade aTrade:listOfTrades){
+            tradeInfo = tradeInfo+aTrade.toString()+"\n";
         }
-        catch(FileNotFoundException nf){
-            nf.printStackTrace();
+        return tradeInfo;
+    }
+    public void doSettlement(String customerID){
+        ArrayList<Trade> tradesByCustomer = new ArrayList<Trade>();
+        for(Trade aTrade:trades){
+            if(aTrade.getCustomerId().equals(customerID)){
+                tradesByCustomer.add(aTrade);
+                //System.out.println("Cus Match");
+            } 
+        }
+        HashMap<String,ArrayList<Trade>> customerTradesGroup = new HashMap<String,ArrayList<Trade>>();
+        
+        for(Trade aTrade:tradesByCustomer){customerTradesGroup.put(aTrade.getSymbol(), new ArrayList<Trade>());}
+
+        for(Trade aTrade:tradesByCustomer){
+            customerTradesGroup.get(aTrade.getSymbol()).add(aTrade);
+        }
+
+        for(ArrayList<Trade> customerTradeSpecficToSymbol:customerTradesGroup.values()){
+            Double marketAmount = 0.0;
+            Integer totalqty = 0;
+            String customerIDF = null;
+            String symbol = null;
+            Double brokerCharge =0.0;
+
+            for(Trade aTrade:customerTradeSpecficToSymbol){
+                customerIDF = aTrade.getCustomerId();
+                symbol = aTrade.getSymbol();
+                brokerCharge = customers.get(customerIDF).getBrokerCharges();
+                marketAmount = marketAmount + (aTrade.getQty()*aTrade.getRate());
+                totalqty = totalqty + aTrade.getQty();
+                
+            }
+            Settlement x = new Settlement(customerIDF, symbol, totalqty, marketAmount, brokerCharge, this.tradeCharges);
+            x.computeSettlement();
+            settlements.add(x);
+        }
+
+    }
+
+    public void getSettlement(){
+        for(Settlement aContract:settlements){
+            System.out.println(aContract.toString()+"\n");
         }
     }
 
-    public ArrayList<Trade> getCustomerSpecificTrades(Customer a){
+   /*  public boolean isRateChanging(ArrayList<Trade> listOfTrades){
+        if
+        for()
+        return false;
+    } */
+    /* public ArrayList<Trade> getCustomerSpecificTrades(Customer a){
         ArrayList<Trade> al = new ArrayList<Trade>();
         for(Trade aTrade:allTrades){
             if(aTrade.aCustomer.getId()==a.getId()){
@@ -110,6 +160,5 @@ public class Broker{
             System.out.println("Total NET   :"+de[9]);
             System.out.println("-------------------------");
         }
-    }
-
+    } */
 }

@@ -1,13 +1,10 @@
 package com.kgisl.brokerapp;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
 public class Settlement{
-    Customer aCustomer;
-    Trade aTrade;
-    Integer totalQty;
-    Double waitAvg;
+    String customerId;
+    String symbol;
+    Double brokerCharge;
+    Integer totalqty;
     Double marketAmount;
     Double brokerageAmount;
     Double gst;
@@ -16,42 +13,92 @@ public class Settlement{
     Double transCharge;
     Double sebiFee;
     Double totalnet;
-    Settlement(){}
+    Charges charges;
 
-    public void computeCharges(){ 
-        //this.marketAmount = rounder(this.totalQty*this.waitAvg);
-        Double oneper = rounder(this.marketAmount/100);
-        this.brokerageAmount = rounder(oneper*2.5);
-        this.gst = rounder((this.brokerageAmount/100)*18);
-        this.sttAmount = rounder(oneper*0.017);
-        this.stampDuty = rounder(oneper*0.005);
-        this.transCharge = rounder(oneper*0.00325);
-        this.sebiFee = rounder(oneper*0.002);
+    public Settlement(String customerId, String symbol,Integer totalqty, Double marketAmount,Double brokerCharge,Charges charges) {
+        this.customerId = customerId;
+        this.symbol = symbol;
+        this.totalqty = totalqty;
+        this.marketAmount = marketAmount;
+        this.brokerCharge = brokerCharge;
+        this.charges = charges;
+    }
+
+    public void computeSettlement(){
+        this.brokerageAmount = (this.marketAmount/100)*this.brokerCharge;
+        Double onePercentOfBrokerAmount = this.getBrokerageAmount()/100;
+        this.gst = onePercentOfBrokerAmount*this.charges.getGstCharge();
+        this.sttAmount = onePercentOfBrokerAmount*this.charges.getSttCharge();
+        this.stampDuty = onePercentOfBrokerAmount*this.charges.getStampDutyCharge();
+        this.transCharge = onePercentOfBrokerAmount*this.charges.getTransactionCharge();
+        this.sebiFee = onePercentOfBrokerAmount*this.charges.getSebiCharges();
         this.totalnet = this.marketAmount+this.brokerageAmount+this.gst+this.sttAmount+this.stampDuty+this.transCharge+this.sebiFee;
     }
-    public void setCustomer(Customer c){
-        this.aCustomer = c;
+
+    public String getCustomerId() {
+        return this.customerId;
     }
-    public void setTrade(Trade t){
-        this.aTrade = t;
+
+    public String getSymbol() {
+        return this.symbol;
     }
-    public String toString(){
-        StringBuffer sb = new StringBuffer();
-        sb.append(this.aCustomer.getId()+",");
-        sb.append(this.aTrade.getSymbol()+",");
-        //sb.append(this.totalQty+",");
-        //sb.append(this.waitAvg+",");
-        sb.append(this.marketAmount+",");
-        sb.append(this.brokerageAmount+",");
-        sb.append(this.gst+",");
-        sb.append(this.sttAmount+",");
-        sb.append(this.stampDuty+",");
-        sb.append(this.transCharge+",");
-        sb.append(this.sebiFee+",");
-        sb.append(this.totalnet);
-        return sb.toString();
+
+    public Double getBrokerCharge() {
+        return this.brokerCharge;
     }
-    public Double rounder(Double val){
-        return new BigDecimal(val).setScale(2, RoundingMode.HALF_UP).doubleValue();
+
+    public Integer getTotalqty() {
+        return this.totalqty;
     }
-}
+    public Double getMarketAmount() {
+        return this.marketAmount;
+    }
+
+    public Double getBrokerageAmount() {
+        return this.brokerageAmount;
+    }
+
+    public Double getGst() {
+        return this.gst;
+    }
+
+    public Double getSttAmount() {
+        return this.sttAmount;
+    }
+
+    public Double getStampDuty() {
+        return this.stampDuty;
+    }
+
+    public Double getTransCharge() {
+        return this.transCharge;
+    }
+
+    public Double getSebiFee() {
+        return this.sebiFee;
+    }
+
+    public Double getTotalnet() {
+        return this.totalnet;
+    }
+
+
+    @Override
+    public String toString() {
+        return "{" +
+            " customerId='" + getCustomerId() + "'" +
+            ", symbol='" + getSymbol() + "'" +
+            ", brokerCharge='" + getBrokerCharge() + "'" +
+            ", totalqty='" + getTotalqty() + "'" +
+            ", marketAmount='" + getMarketAmount() + "'" +
+            ", brokerageAmount='" + getBrokerageAmount() + "'" +
+            ", gst='" + getGst() + "'" +
+            ", sttAmount='" + getSttAmount() + "'" +
+            ", stampDuty='" + getStampDuty() + "'" +
+            ", transCharge='" + getTransCharge() + "'" +
+            ", sebiFee='" + getSebiFee() + "'" +
+            ", totalnet='" + getTotalnet() + "'" +
+            "}";
+    }
+
+} 
