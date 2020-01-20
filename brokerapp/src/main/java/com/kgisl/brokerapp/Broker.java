@@ -39,6 +39,7 @@ public class Broker{
                 allTrades.add(aTrade);
                 //System.out.println("---Done--");
             }
+            inFile.close();
         }
         catch(FileNotFoundException nf){
             nf.printStackTrace();

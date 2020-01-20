@@ -2,7 +2,6 @@ package com.kgisl.brokerapp;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 
 public class Settlement{
     Customer aCustomer;
@@ -53,8 +52,6 @@ public class Settlement{
         return sb.toString();
     }
     public Double rounder(Double val){
-        DecimalFormat df = new DecimalFormat("0.00");
-        //System.out.println(val+"ffff"+Double.valueOf(df.format(val)));      
         return new BigDecimal(val).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 }
