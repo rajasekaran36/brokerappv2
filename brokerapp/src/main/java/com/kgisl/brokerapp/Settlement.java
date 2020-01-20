@@ -22,7 +22,7 @@ public class Settlement{
         //this.marketAmount = rounder(this.totalQty*this.waitAvg);
         Double oneper = rounder(this.marketAmount/100);
         this.brokerageAmount = rounder(oneper*2.5);
-        this.gst = rounder(oneper*18);
+        this.gst = rounder((this.brokerageAmount/100)*18);
         this.sttAmount = rounder(oneper*0.017);
         this.stampDuty = rounder(oneper*0.005);
         this.transCharge = rounder(oneper*0.00325);
